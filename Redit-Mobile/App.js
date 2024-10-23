@@ -5,16 +5,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Auth0Provider, useAuth0 } from 'react-native-auth0'; 
 import Inicio from './pages/Inicio';
 import Home from './pages/Home';
+import CrearPostPage from './pages/CrearPostPage';  
+import LikesPage from './pages/LikesPage';  
+import PostsPage from './pages/PostsPage'; 
+import CommentsPage from './pages/CommentsPage';    
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const { loginWithRedirect, isAuthenticated, logout, user } = useAuth0();
-
-  // Definir datos simulados para los posts, likes, y comments
-  const [userPosts, setUserPosts] = useState([]);
-  const [userLikes, setUserLikes] = useState([]);
-  const [userComments, setUserComments] = useState([]);
 
   if (!isAuthenticated) {
     return <Inicio onLoginClick={loginWithRedirect} />;
