@@ -4,7 +4,8 @@ import BarraLateral from '../componentes/BarraLateral';
 import BarraSuperior from '../componentes/BarraSuperior';
 import Post from '../componentes/Post';
 
-const Likes = ({ navigation }) => {
+const Likes = ({ navigation, route }) => {
+  const { username } = route.params;
   // Datos estáticos de ejemplo para los posts likeados
   const likedPosts = [
     {
@@ -31,11 +32,11 @@ const Likes = ({ navigation }) => {
       <BarraSuperior navigation={navigation} />
       <View style={styles.mainContent}>
         {/* Barra Lateral */}
-        <BarraLateral navigation={navigation} />
+        <BarraLateral navigation={navigation} username={username} />
 
         {/* Lista de posts likeados */}
         <ScrollView style={styles.feed}>
-          <Text style={styles.title}>Posts likeados por Franco Pizzolante</Text>
+          <Text style={styles.title}>Posts creados por {username}</Text>
           {likedPosts.map((post) => (
             <Post
               key={post.id}

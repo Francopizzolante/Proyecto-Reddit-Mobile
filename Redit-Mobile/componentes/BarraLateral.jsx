@@ -1,27 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const BarraLateral = ({ navigation }) => {
+const BarraLateral = ({ navigation, username }) => {
   return (
     <View style={styles.sidebar}>
         <Image
             source={{ uri: 'https://via.placeholder.com/80' }} // Cambia por la URL real de la imagen
             style={styles.profilePic}
         />
-        <Text style={styles.name}>Franco Pizzolante</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.name}>{username}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Home', {username})}>
             <Text style={styles.menuItem}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('CrearPost')}>
+        <TouchableOpacity onPress={() => navigation.navigate('CrearPost', {username})}>
             <Text style={styles.menuItem}>Crear post</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Likes')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Likes', {username})}>
             <Text style={styles.menuItem}>Likes</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Posts')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Posts', {username})}>
             <Text style={styles.menuItem}>Posts</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Comments')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Comments', {username})}>
             <Text style={styles.menuItem}>Comments</Text>
         </TouchableOpacity>
     </View>

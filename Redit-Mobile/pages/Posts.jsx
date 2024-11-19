@@ -4,7 +4,8 @@ import BarraLateral from '../componentes/BarraLateral';
 import BarraSuperior from '../componentes/BarraSuperior';
 import Post from '../componentes/Post';
 
-const Posts = ({ navigation }) => {
+const Posts = ({ navigation, route }) => {
+  const { username } = route.params;
   // Datos estáticos de ejemplo para los posts del usuario
   const userPosts = [
     {
@@ -31,11 +32,11 @@ const Posts = ({ navigation }) => {
       <BarraSuperior navigation={navigation} />
       <View style={styles.mainContent}>
         {/* Barra Lateral */}
-        <BarraLateral navigation={navigation} />
+        <BarraLateral navigation={navigation} username={username} />
 
         {/* Lista de posts del usuario */}
         <ScrollView style={styles.feed}>
-          <Text style={styles.title}>Posts hechos por Franco Pizzolante</Text>
+          <Text style={styles.title}>Posts hechos por {username}</Text>
           {userPosts.map((post) => (
             <Post
               key={post.id}

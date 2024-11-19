@@ -4,7 +4,8 @@ import BarraLateral from '../componentes/BarraLateral';
 import BarraSuperior from '../componentes/BarraSuperior';
 import Comment from '../componentes/Comment';
 
-const Comments = ({ navigation }) => {
+const Comments = ({ navigation, route }) => {
+  const { username } = route.params;
   // Datos estáticos de ejemplo para los comentarios
   const comments = [
     {
@@ -39,11 +40,11 @@ const Comments = ({ navigation }) => {
       <BarraSuperior navigation={navigation} />
       <View style={styles.mainContent}>
         {/* Barra Lateral */}
-        <BarraLateral navigation={navigation} />
+        <BarraLateral navigation={navigation} username={username} />
 
         {/* Lista de comentarios */}
         <ScrollView style={styles.feed}>
-          <Text style={styles.title}>Comentarios hechos por Franco Pizzolante</Text>
+          <Text style={styles.title}>Comentarios hechos por {username}</Text>
           {comments.map((comment) => (
             <Comment
               key={comment.id}
