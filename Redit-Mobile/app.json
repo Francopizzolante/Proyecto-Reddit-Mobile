@@ -3,6 +3,7 @@
     "name": "Redit-Mobile",
     "slug": "Redit-Mobile",
     "version": "1.0.0",
+    "sdkVersion": "52.0.0",
     "orientation": "portrait",
     "icon": "./assets/Logo.png",
     "userInterfaceStyle": "light",
@@ -12,10 +13,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
+        "newArchEnabled": true,
         "foregroundImage": "./assets/Logo.png",
         "backgroundColor": "#ffffff"
       }
