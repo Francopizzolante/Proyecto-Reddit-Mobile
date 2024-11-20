@@ -6,7 +6,11 @@ const Post = ({ author, title, description, image, likes }) => {
     <View style={styles.post}>
       <Text style={styles.postAuthor}>{author}</Text>
       <Text style={styles.postTitle}>{title}</Text>
-      <Image source={{ uri: image }} style={styles.postImage} />
+      {/* Carga de imagen remota */}
+      <Image 
+        source={{ uri: image }} // Asegúrate de pasar la URL completa al prop `image`
+        style={styles.postImage} 
+      />
       <Text style={styles.postDescription}>{description}</Text>
       <View style={styles.postFooter}>
         <Text style={styles.likes}>❤️ {likes}</Text>

@@ -1,59 +1,94 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Alert } from 'react-native';
 import BarraLateral from '../componentes/BarraLateral';
 import BarraSuperior from '../componentes/BarraSuperior';
 import Comment from '../componentes/Comment';
+import api from '../api'; // Cliente HTTP configurado
 
 const Comments = ({ navigation, route }) => {
-  const { username } = route.params;
-  // Datos estáticos de ejemplo para los comentarios
-  const comments = [
-    {
-      id: 1,
-      title: 'Mi foto de perfil',
-      content: '¡Gracias! Me alegra que te guste.',
-      date: '14/11/2024',
-    },
-    {
-      id: 2,
-      title: 'Retrato elegante',
-      content: '¡Muchas gracias! Fue un reto divertido.',
-      date: '14/11/2024',
-    },
-    {
-      id: 3,
-      title: 'Ritmos abstractos',
-      content: 'Comentario desde Postman',
-      date: '17/11/2024',
-    },
-  ];
+  const { username } = route.params; // Obtener el nombre de usuario desde las rutas
+  const [comments, setComments] = useState([]); // Estado para almacenar los comentarios
+  const [loading, setLoading] = useState(true); // Estado de carga
 
-  const handleDelete = (id) => {
-    // Lógica para eliminar un comentario
-    console.log(`Eliminar comentario con ID: ${id}`);
-    alert('Comentario eliminado');
+  // Función para obtener comentarios desde el backend
+  const fetchComments = async () => {
+    try {
+      const trimmedUsername = username.trim(); // Elimina espacios adicionales
+      const encodedUsername = encodeURIComponent(trimmedUsername); // Codifica el username
+      const url = `/comments/user/${encodedUsername}`; // Ruta para obtener comentarios
+      console.log("URL generada para comentarios:", url); // Depuración
+  
+      const response = await api.get(url); // Llama al endpoint para obtener los comentarios
+      const commentsWithTitles = await Promise.all(
+        response.data.map(async (comment) => {
+          try {
+            // Llama al endpoint para obtener el título del post por ID
+            const postResponse = await api.get(`posts/title/${comment.postId}`);
+            return {
+              ...comment,
+              title: postResponse?.data?.titulo || 'Post no encontrado', // Añade el título al comentario
+              created_at: new Date(comment.created_at).toLocaleDateString('es-ES'), // Formatea la fecha
+            };
+          } catch (err) {
+            console.error(`Error al obtener el título para postId ${comment.postId}:`, err.message);
+            return {
+              ...comment,
+              title: 'Error al obtener título', // Manejo de errores para el título
+              created_at: new Date(comment.created_at).toLocaleDateString('es-ES'), // Formatea la fecha
+            };
+          }
+        })
+      );
+  
+      console.log("Comentarios con títulos:", commentsWithTitles); // Depuración
+      setComments(commentsWithTitles); // Actualiza el estado con los comentarios formateados
+    } catch (error) {
+      console.error('Error al obtener los comentarios:', error.message);
+    } finally {
+      setLoading(false); // Finaliza la carga
+    }
   };
+  
+  
+  
+
+  // Función para eliminar un comentario
+  const handleDelete = async (id) => {
+    try {
+      console.log(`Intentando eliminar comentario con ID: ${id}`);
+      await api.delete(`/comments/${id}`); // Llama al endpoint para eliminar el comentario
+      setComments((prevComments) => prevComments.filter((comment) => comment.id !== id)); // Elimina el comentario del estado
+      Alert.alert('Comentario eliminado');
+    } catch (error) {
+      console.error('Error al eliminar el comentario:', error.message);
+      Alert.alert('Error', 'No se pudo eliminar el comentario.');
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Barra Superior */}
       <BarraSuperior navigation={navigation} />
       <View style={styles.mainContent}>
-        {/* Barra Lateral */}
         <BarraLateral navigation={navigation} username={username} />
-
-        {/* Lista de comentarios */}
         <ScrollView style={styles.feed}>
           <Text style={styles.title}>Comentarios hechos por {username}</Text>
-          {comments.map((comment) => (
-            <Comment
-              key={comment.id}
-              title={comment.title}
-              content={comment.content}
-              date={comment.date}
-              onDelete={() => handleDelete(comment.id)}
-            />
-          ))}
+          {loading ? (
+            <ActivityIndicator size="large" color="#fff" />
+          ) : (
+            comments.map((comment) => (
+              <Comment
+                key={comment.id}
+                title={comment.title}
+                content={comment.content}
+                date={comment.created_at}
+                onDelete={() => handleDelete(comment.id)} // Llama a la función para eliminar
+              />
+            ))
+          )}
         </ScrollView>
       </View>
     </View>
