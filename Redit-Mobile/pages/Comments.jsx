@@ -16,7 +16,6 @@ const Comments = ({ navigation, route }) => {
       const trimmedUsername = username.trim(); // Elimina espacios adicionales
       const encodedUsername = encodeURIComponent(trimmedUsername); // Codifica el username
       const url = `/comments/user/${encodedUsername}`; // Ruta para obtener comentarios
-      console.log("URL generada para comentarios:", url); // Depuración
   
       const response = await api.get(url); // Llama al endpoint para obtener los comentarios
       const commentsWithTitles = await Promise.all(
@@ -40,7 +39,6 @@ const Comments = ({ navigation, route }) => {
         })
       );
   
-      console.log("Comentarios con títulos:", commentsWithTitles); // Depuración
       setComments(commentsWithTitles); // Actualiza el estado con los comentarios formateados
     } catch (error) {
       console.error('Error al obtener los comentarios:', error.message);
